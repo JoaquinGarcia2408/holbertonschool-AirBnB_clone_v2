@@ -1,20 +1,28 @@
 #!/usr/bin/python3
-"""List of states"""
+"""script that starts a Flask web app"""
+
 from flask import Flask, render_template
 from models import storage
+from models.state import State
+from models import storage
+
+
 app = Flask(__name__)
 
+# Commenting
+@app.route('/states_list', strict_slashes=False)
+def states_list():
+    """Comm2"""  
+    states = storage.all(State).values()
+    sorted_states = sorted(states, key=lambda state: state.name)  
+    return render_template('7-states_list.html', states=sorted_states)
 
+# Comment
 @app.teardown_appcontext
-def remove_session(x):
+def close_state(exception): 
+    """Comm1"""  
     storage.close()
 
-
-@app.route("/states_list", strict_slashes=False)
-def states_list():
-    return render_template("7-states_list.html",
-                           instances=storage.all().values())
-
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+# Run the Flask app
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
