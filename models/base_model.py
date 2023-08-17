@@ -3,10 +3,21 @@
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+
+
+Base = declarative_base()
 
 class Base = declarative_base()
 
 class BaseModel:
+
+    id = Column(String(60), nullable=False, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+
     """A base class for all hbnb models"""
     id = Column(String(60), nullable=False, primary_key=True)
     created_at = Column(DateTime(), nullable=False, default=func.utcnow())
@@ -14,6 +25,7 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
+<<<<<<< HEAD
         if not kwargs:
             from models import storag
             self.id = str(uuid.uuid4())
@@ -30,16 +42,31 @@ class BaseModel:
                 setattr(self, key, value)
             self.save()
             self.__dict__.update(kwargs)
+=======
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == 'updated_at':
+                    value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+                if key == 'created_at':
+                    value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+                if key != '__class__':
+                    setattr(self, key, value)
+        self.save()
+>>>>>>> bfe7d7a89ed3630949745f11107717c521a3196c
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        return "[{:s}] ({:s}) {}".format(self.__class__.__name__,
+                                         self.id, self.__dict__)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
+        storage.new(self)
         storage.save()
         storage.new(self)
 
@@ -54,8 +81,16 @@ class BaseModel:
         if "_sa_instance_state" in dictionary:
             dictionary.pop('_sa_instance_state', None)
         return dictionary
+<<<<<<< HEAD
     
     def delete(self):
         """Deletes an instance of a user"""
         from models import storage
         storage.delete(self)
+=======
+
+    def delete(self):
+        """Deletes an instance of a user"""
+        from models import storage
+        storage.delete(self)
+>>>>>>> bfe7d7a89ed3630949745f11107717c521a3196c
