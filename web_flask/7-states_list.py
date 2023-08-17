@@ -5,13 +5,13 @@ from models import storage
 
 app = Flask(__name__)
 
-# Método para manejar el cierre de la sesión SQLAlchemy
+
 @app.teardown_appcontext
 def teardown_db(exception):
+    "Close the session after each request"
     storage.close()
 
 
-# Ruta para obtener datos de almacenamiento
 def states_list():
     return render_template("7-states_list.html",
                            states=storage.all(State).values())
