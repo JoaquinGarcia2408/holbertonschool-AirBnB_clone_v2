@@ -12,7 +12,9 @@ def teardown_db(exception):
     storage.close()
 
 
+@app.route("/states_list", strict_slashes=False)
 def states_list():
+    "Write a script that starts a Flask web application"
     return render_template("7-states_list.html",
                            states=storage.all(State).values())
 
