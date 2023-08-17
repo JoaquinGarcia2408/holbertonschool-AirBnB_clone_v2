@@ -10,7 +10,6 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class Base = declarative_base()
 
 class BaseModel:
 
@@ -20,29 +19,11 @@ class BaseModel:
 
     """A base class for all hbnb models"""
     id = Column(String(60), nullable=False, primary_key=True)
-    created_at = Column(DateTime(), nullable=False, default=func.utcnow())
-    updated_at = Column(DateTime(), nullable=False, default=func.utcnow())
+    created_at = Column(DateTime(), nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime(), nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
-<<<<<<< HEAD
-        if not kwargs:
-            from models import storag
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-        else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            del kwargs['__class__']
-
-             for key, value in kwargs.items():
-                setattr(self, key, value)
-            self.save()
-            self.__dict__.update(kwargs)
-=======
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
@@ -55,7 +36,6 @@ class BaseModel:
                 if key != '__class__':
                     setattr(self, key, value)
         self.save()
->>>>>>> bfe7d7a89ed3630949745f11107717c521a3196c
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -81,16 +61,8 @@ class BaseModel:
         if "_sa_instance_state" in dictionary:
             dictionary.pop('_sa_instance_state', None)
         return dictionary
-<<<<<<< HEAD
-    
-    def delete(self):
-        """Deletes an instance of a user"""
-        from models import storage
-        storage.delete(self)
-=======
 
     def delete(self):
         """Deletes an instance of a user"""
         from models import storage
         storage.delete(self)
->>>>>>> bfe7d7a89ed3630949745f11107717c521a3196c
