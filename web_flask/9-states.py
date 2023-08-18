@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""comments"""
-
+"Task 9. Script that starts a web Application"
 from flask import Flask, render_template
 from models import storage
 from models.state import State
@@ -8,23 +7,30 @@ from models.state import State
 app = Flask(__name__)
 
 
-@app.route('/states', strict_slashes=False)
-def states_list():
-    states = storage.all(State).values()
-    sorted_states = sorted(states, key=lambda state: state.name)
-    return render_template('7-states_list.html', states=sorted_states)
-
-@app.route('/states/<id>')
-def state_cities(id):
-    state = storage.get(State, id)
-    if state is None:
-        return render_template('9-states.html', found_id=False)
-    cities = sorted(state.cities, key=lambda city: city.name)
-    return render_template('9-states.html', state=state, cities=cities)
-
 @app.teardown_appcontext
-def teardown_db(exception):
+def app_teardown_appcontext(self):
+    """Remove the current
+    SQLAlchemy session"""
     storage.close()
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+
+@app.route("/states", strict_slashes=False)
+def states():
+    """Generate a list of all the states"""
+    return render_template("9-states.html",
+                           states=storage.all(State).values())
+
+
+@app.route("/states/<string:id>", strict_slashes=False)
+def states_id(id):
+    """ Display the list of states, and
+    their cities if the id is displayed"""
+    for s in storage.all(State).values():
+        if s.id == id:
+            return render_template("9-states.html", id=id,
+                                   state=s, status='id')
+    return render_template("9-states.html", states=s, status='none')
+
+
+if __name__ == "__main__":
+    app.run(port=5000, host="0.0.0.0")
